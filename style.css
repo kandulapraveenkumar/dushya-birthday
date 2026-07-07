@@ -436,6 +436,13 @@ body:not(.lang-te) .lang-te {
   bottom: 25px;
   left: 25px;
   z-index: 900;
+  transition: opacity 0.4s ease, transform 0.4s ease, pointer-events 0.4s ease;
+}
+
+.floating-controls-left.hide-floating {
+  opacity: 0;
+  transform: translateY(20px);
+  pointer-events: none;
 }
 
 .floating-controls-right {
@@ -443,6 +450,13 @@ body:not(.lang-te) .lang-te {
   bottom: 25px;
   right: 25px;
   z-index: 900;
+  transition: opacity 0.4s ease, transform 0.4s ease, pointer-events 0.4s ease;
+}
+
+.floating-controls-right.hide-floating {
+  opacity: 0;
+  transform: translateY(20px);
+  pointer-events: none;
 }
 
 .control-btn {

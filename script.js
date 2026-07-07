@@ -837,6 +837,27 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  // Hide floating controls when scrolling past the final thank you section
+  const thankYouSection = document.getElementById('thank-you');
+  const floatingLeft = document.querySelector('.floating-controls-left');
+  const floatingRight = document.querySelector('.floating-controls-right');
+
+  if (thankYouSection && floatingLeft && floatingRight) {
+    function handleScrollControls() {
+      const rect = thankYouSection.getBoundingClientRect();
+      // If the top of the thank-you section enters the viewport
+      if (rect.top < window.innerHeight) {
+        floatingLeft.classList.add('hide-floating');
+        floatingRight.classList.add('hide-floating');
+      } else {
+        floatingLeft.classList.remove('hide-floating');
+        floatingRight.classList.remove('hide-floating');
+      }
+    }
+    window.addEventListener('scroll', handleScrollControls, { passive: true });
+    window.addEventListener('resize', handleScrollControls);
+  }
+
   // Initial render of greetings feed
   renderBlessings();
 });
