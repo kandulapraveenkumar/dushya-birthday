@@ -1,0 +1,1172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dushya's 1st Birthday Celebration</title>
+  
+  <!-- Bootstrap 5 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  
+  <!-- Font Awesome for Icons -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet">
+  
+  <!-- Google Fonts: Playfair Display for headings, Quicksand for body, Mandali for Telugu -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Quicksand:wght@300..700&family=Mandali&display=swap" rel="stylesheet">
+  
+  <!-- Custom Stylesheet -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="lang-en">
+
+  <!-- Background Decorative Canvas for Butterflies, Clouds, and Sparkles -->
+  <div class="decorations-container" id="decorations">
+    <!-- Floating pastel clouds -->
+    <div class="cloud cloud-1"></div>
+    <div class="cloud cloud-2"></div>
+    <div class="cloud cloud-3"></div>
+    <!-- Floating pastel balloons -->
+    <div class="floating-balloon balloon-1"></div>
+    <div class="floating-balloon balloon-2"></div>
+    <div class="floating-balloon balloon-3"></div>
+    <div class="floating-balloon balloon-4"></div>
+  </div>
+
+  <!-- Confetti Canvas -->
+  <canvas id="confetti-canvas"></canvas>
+
+  <!-- 1. Opening Invitation Reveal Screen (Full-Screen Overlay) -->
+  <div id="reveal-screen" class="reveal-overlay">
+    <div class="reveal-content text-center">
+      <!-- Animated Gold Crown & Garland -->
+      <div class="reveal-badge mb-4">
+        <svg class="crown-svg" viewBox="0 0 100 100" width="80" height="80">
+          <path d="M10,80 L90,80 L80,30 L60,55 L50,20 L40,55 L20,30 Z" fill="url(#goldGradient)" />
+          <circle cx="50" cy="15" r="5" fill="#DAA520" />
+          <circle cx="20" cy="25" r="4" fill="#DAA520" />
+          <circle cx="80" cy="25" r="4" fill="#DAA520" />
+          <defs>
+            <linearGradient id="goldGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#FFE259" />
+              <stop offset="100%" stop-color="#FFA751" />
+            </linearGradient>
+          </defs>
+        </svg>
+      </div>
+      
+      <!-- Envelope Wrapper -->
+      <div class="envelope-wrapper" id="envelope-interactive" data-stage="seal">
+        <div class="envelope">
+          <div class="front flap" id="envelope-flap"></div>
+          <div class="front pocket"></div>
+          <div class="letter" id="envelope-letter">
+            <div class="letter-floral">✿</div>
+            <div class="letter-text">
+              <span class="lang-en">You are Invited!</span>
+              <span class="lang-te">మీకు ఆహ్వానం!</span>
+            </div>
+            <div class="letter-subtext">
+              <span class="lang-en">To Dushya's 1st Birthday</span>
+              <span class="lang-te">దుష్య 1వ పుట్టినరోజుకు</span>
+            </div>
+          </div>
+          <!-- Interactive Golden Wax Seal -->
+          <div class="wax-seal" id="wax-seal">
+            <div class="seal-inner">
+              <i class="fa-solid fa-crown seal-icon"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <p class="reveal-instruction mt-4" id="reveal-instruction">
+        <span class="stage-instruction seal-inst lang-en">👉 Tap the Golden Wax Seal to break it 👈</span>
+        <span class="stage-instruction seal-inst lang-te">👉 ముద్రను తెరిచేందుకు సీల్ పై నొక్కండి 👈</span>
+        
+        <span class="stage-instruction flap-inst lang-en d-none">✉ Tap the envelope flap to open it</span>
+        <span class="stage-instruction flap-inst lang-te d-none">✉ కవరును తెరవడానికి పైన నొక్కండి</span>
+        
+        <span class="stage-instruction card-inst lang-en d-none">✨ Tap the invitation card to slide it out ✨</span>
+        <span class="stage-instruction card-inst lang-te d-none">✨ పత్రికను బయటకు తీయడానికి ట్యాప్ చేయండి ✨</span>
+      </p>
+    </div>
+  </div>
+
+  <!-- Floating Sticky Action Buttons -->
+  <!-- Left Side: Language Control -->
+  <div class="floating-controls-left">
+    <button class="control-btn lang-toggle-btn" id="lang-toggle" aria-label="Toggle Language" title="Change Language">
+      <i class="fa-solid fa-language"></i>
+      <span class="btn-label-text lang-en">తెలుగు</span>
+      <span class="btn-label-text lang-te">English</span>
+    </button>
+  </div>
+  
+  <!-- Right Side: Music Control -->
+  <div class="floating-controls-right">
+    <button class="control-btn music-btn playing" id="music-toggle" aria-label="Toggle Music" title="Toggle Music">
+      <i class="fa-solid fa-music"></i>
+      <div class="music-waves">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+    </button>
+  </div>
+
+  <!-- Main Website Container (Hidden until reveal screen is opened) -->
+  <main id="main-content" class="content-wrapper d-none">
+
+    <!-- 2. Hero Section -->
+    <section id="hero" class="hero-section text-center position-relative overflow-hidden">
+      <div class="container py-5">
+        <div class="flower-garland left"></div>
+        <div class="flower-garland right"></div>
+        
+        <div class="hero-badge mb-3">
+          <span class="lang-en">Our Little Princess is Turning One</span>
+          <span class="lang-te">మా చిన్న రాజకుమారి మొదటి పుట్టినరోజు</span>
+        </div>
+        
+        <h1 class="baby-name animate-pop">Dushya</h1>
+        
+        <h2 class="hero-subtitle mb-4">
+          <span class="lang-en">Dushya’s 1st Birthday Celebration</span>
+          <span class="lang-te">దుష్య మొదటి పుట్టినరోజు వేడుక</span>
+        </h2>
+        
+        <div class="hero-image-frame mx-auto my-4 animate-float">
+          <!-- Beautiful Custom Princess SVG Frame -->
+          <svg class="princess-frame-svg" viewBox="0 0 200 200" width="180" height="180">
+            <defs>
+              <clipPath id="circleClip">
+                <circle cx="100" cy="100" r="80" />
+              </clipPath>
+              <linearGradient id="pastelPinkGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#FFE4E1" />
+                <stop offset="100%" stop-color="#FFB6C1" />
+              </linearGradient>
+              <linearGradient id="goldRing" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#FFD700" />
+                <stop offset="50%" stop-color="#FFF8DC" />
+                <stop offset="100%" stop-color="#DAA520" />
+              </linearGradient>
+            </defs>
+            <!-- Decorative Gold Ring -->
+            <circle cx="100" cy="100" r="85" fill="none" stroke="url(#goldRing)" stroke-width="4" />
+            <!-- Inner Backdrop -->
+            <circle cx="100" cy="100" r="80" fill="url(#pastelPinkGrad)" />
+            <!-- Royal Crown inside -->
+            <path d="M60,130 L140,130 L130,80 L110,105 L100,70 L90,105 L70,80 Z" fill="#DAA520" opacity="0.15" />
+            <!-- Beautiful Baby Silhouette Graphic -->
+            <g transform="translate(65, 55) scale(0.75)" fill="#E78895">
+              <path d="M46.7,21.9C46.7,9.8,36.9,0,24.8,0S2.9,9.8,2.9,21.9c0,5.7,2.2,10.9,5.7,14.8c-2,1.3-3.6,3.2-4.5,5.5 C1.7,48.2,5.2,54,11.3,55.2c1.7,0.3,3.4,0.5,5.1,0.5h16.8c1.7,0,3.4-0.2,5.1-0.5c6.1-1.2,9.6-7,7.2-13c-0.9-2.3-2.5-4.2-4.5-5.5 C44.5,32.8,46.7,27.6,46.7,21.9z M24.8,5c9.3,0,16.9,7.6,16.9,16.9s-7.6,16.9-16.9,16.9S7.9,31.2,7.9,21.9S15.5,5,24.8,5z" />
+              <path d="M24.8,47c-2.4,0-4.6,0.3-6.6,0.8c0.7,0.9,1.7,1.6,2.9,1.9c1.2,0.3,2.4,0.4,3.7,0.4s2.5-0.1,3.7-0.4 c1.2-0.3,2.2-1,2.9-1.9C29.4,47.3,27.2,47,24.8,47z" />
+            </g>
+            <!-- Decorative Flower Garland -->
+            <circle cx="100" cy="18" r="8" fill="#FFF" stroke="#FFB6C1" stroke-width="1.5" />
+            <circle cx="100" cy="18" r="4" fill="#FFB6C1" />
+            <circle cx="35" cy="50" r="7" fill="#E6E6FA" stroke="#FFF" stroke-width="1.5" />
+            <circle cx="165" cy="50" r="7" fill="#E6E6FA" stroke="#FFF" stroke-width="1.5" />
+            <circle cx="20" cy="100" r="7" fill="#FFF" stroke="#FFB6C1" stroke-width="1.5" />
+            <circle cx="180" cy="100" r="7" fill="#FFF" stroke="#FFB6C1" stroke-width="1.5" />
+            <circle cx="40" cy="155" r="8" fill="#E6E6FA" stroke="#FFF" stroke-width="1.5" />
+            <circle cx="160" cy="155" r="8" fill="#E6E6FA" stroke="#FFF" stroke-width="1.5" />
+          </svg>
+          <!-- Fluttering Butterflies -->
+          <div class="flying-butterfly butterfly-top-left">🦋</div>
+          <div class="flying-butterfly butterfly-bottom-right">🦋</div>
+        </div>
+        
+        <p class="hero-tagline fs-5 mt-3">
+          <span class="lang-en">Join us to celebrate the joy, laughter, and magic of our baby girl's first year!</span>
+          <span class="lang-te">మా పాపాయి మొదటి సంవత్సరపు సంతోషాలు, నవ్వులు మరియు మధుర క్షణాలను కలిసి జరుపుకుందాం రండి!</span>
+        </p>
+      </div>
+    </section>
+
+    <!-- 3. Countdown Timer Section -->
+    <section id="countdown" class="countdown-section text-center py-5">
+      <div class="container">
+        <h3 class="section-title mb-4">
+          <span class="lang-en">The Celebration Begins In</span>
+          <span class="lang-te">వేడుక ప్రారంభానికి ఇంకా</span>
+        </h3>
+        <div class="countdown-container d-flex justify-content-center flex-wrap gap-3 gap-md-4">
+          <div class="countdown-card">
+            <span class="time-num" id="days">00</span>
+            <span class="time-label lang-en">Days</span>
+            <span class="time-label lang-te">రోజులు</span>
+          </div>
+          <div class="countdown-card">
+            <span class="time-num" id="hours">00</span>
+            <span class="time-label lang-en">Hours</span>
+            <span class="time-label lang-te">గంటలు</span>
+          </div>
+          <div class="countdown-card">
+            <span class="time-num" id="minutes">00</span>
+            <span class="time-label lang-en">Minutes</span>
+            <span class="time-label lang-te">నిమిషాలు</span>
+          </div>
+          <div class="countdown-card">
+            <span class="time-num" id="seconds">00</span>
+            <span class="time-label lang-en">Seconds</span>
+            <span class="time-label lang-te">సెకన్లు</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. Date and Time Section -->
+    <section id="date-time" class="date-time-section py-5 position-relative">
+      <!-- Decorative Hanging String Background stars -->
+      <div class="hanging-star star-left d-none d-lg-block">⭐</div>
+      <div class="hanging-star star-right d-none d-lg-block">⭐</div>
+      
+      <div class="container text-center">
+        <h3 class="section-title mb-5">
+          <span class="lang-en">Save the Date</span>
+          <span class="lang-te">తేదీ గుర్తుంచుకోండి</span>
+        </h3>
+        <p class="section-tagline mb-5">
+          <span class="lang-en">✨ Rub / Scratch the card below to reveal the celebration details! ✨</span>
+          <span class="lang-te">✨ తేదీ వివరాలు తెలుసుకోవడానికి కింద ఉన్న కార్డును రుద్దండి/స్క్రాచ్ చేయండి! ✨</span>
+        </p>
+        <div class="row justify-content-center">
+          <!-- Unified Single Card -->
+          <div class="col-12 col-lg-10">
+            <div class="date-card shadow-sm p-4 p-md-5 hang-effect scratch-card-container">
+              <!-- Hanging Ribbon visual in CSS -->
+              <div class="card-ribbon"></div>
+              
+              <!-- Underlying Card content (Initially hidden behind scratch layer) -->
+              <div class="card-content-inner">
+                <div class="row g-4 justify-content-center align-items-center">
+                  <!-- Date Item -->
+                  <div class="col-12 col-md-4 border-end-md">
+                    <div class="card-illustration mb-3">
+                      <svg viewBox="0 0 100 100" class="theme-card-svg">
+                        <!-- Cute Pink Calendar Frame -->
+                        <rect x="25" y="22" width="50" height="58" rx="8" fill="#FFF" stroke="#FFB6C1" stroke-width="3"/>
+                        <path d="M25,32 L75,32" stroke="#FFB6C1" stroke-width="3"/>
+                        <rect x="25" y="22" width="50" height="13" rx="3" fill="#E78895"/>
+                        <!-- Rings -->
+                        <circle cx="38" cy="18" r="4.5" fill="#DAA520" stroke="#FFF" stroke-width="1"/>
+                        <circle cx="62" cy="18" r="4.5" fill="#DAA520" stroke="#FFF" stroke-width="1"/>
+                        <!-- Calendar grid dots -->
+                        <circle cx="35" cy="42" r="2" fill="#E6E6FA"/>
+                        <circle cx="50" cy="42" r="2" fill="#E6E6FA"/>
+                        <circle cx="65" cy="42" r="2" fill="#E6E6FA"/>
+                        <circle cx="35" cy="54" r="2" fill="#E6E6FA"/>
+                        <!-- Hearts Badge on the 16th date block -->
+                        <path d="M50,56 C50,56 46,50 40,54 C36,57 40,68 50,74 C60,68 64,57 60,54 C54,50 50,56 50,56 Z" fill="#FF8A80" opacity="0.95"/>
+                        <text x="50" y="67" fill="#FFF" font-family="'Quicksand', sans-serif" font-weight="bold" font-size="11" text-anchor="middle">16</text>
+                      </svg>
+                    </div>
+                    <h4 class="card-subtitle mb-2">
+                      <span class="lang-en">Date</span>
+                      <span class="lang-te">తేదీ</span>
+                    </h4>
+                    <p class="card-text fs-4 fw-bold text-pink mb-0">
+                      <span class="lang-en">July 16, 2026</span>
+                      <span class="lang-te">జూలై 16, 2026</span>
+                    </p>
+                  </div>
+                  
+                  <!-- Day Item -->
+                  <div class="col-12 col-md-4 border-end-md">
+                    <div class="card-illustration mb-3">
+                      <svg viewBox="0 0 100 100" class="theme-card-svg">
+                        <!-- Cute Cloud & Smiling Sun -->
+                        <circle cx="64" cy="42" r="16" fill="#FFE082" stroke="#FFB300" stroke-width="2"/>
+                        <!-- Sun Rays -->
+                        <path d="M64,22 L64,18 M64,62 L64,66 M44,42 L40,42 M84,42 L88,42" stroke="#FFB300" stroke-width="2" stroke-linecap="round"/>
+                        <!-- Fluffy Cloud overlay -->
+                        <path d="M22,60 C22,50 30,45 42,45 C48,45 52,48 55,52 C60,46 70,46 74,52 C80,55 80,62 76,68 C79,72 77,78 72,80 C68,82 32,82 28,80 C22,76 22,68 22,60 Z" fill="#FFF" stroke="#B3E5FC" stroke-width="2"/>
+                        <!-- Smiling Face on Sun -->
+                        <circle cx="64" cy="38" r="1.5" fill="#4E342E"/>
+                        <circle cx="58" cy="38" r="1.5" fill="#4E342E"/>
+                        <path d="M59,43 Q61,45 63,43" stroke="#4E342E" stroke-width="1" fill="none"/>
+                        <!-- Cute Fluttering Butterfly -->
+                        <g transform="translate(16, 22) scale(0.65)">
+                          <path d="M10,10 C5,4 1,12 5,14 C1,16 5,24 10,18" fill="#F06292"/>
+                          <path d="M11,10 C16,4 20,12 16,14 C20,16 16,24 11,18" fill="#F06292"/>
+                          <ellipse cx="10.5" cy="14" rx="1.5" ry="6" fill="#4E342E"/>
+                        </g>
+                      </svg>
+                    </div>
+                    <h4 class="card-subtitle mb-2">
+                      <span class="lang-en">Day</span>
+                      <span class="lang-te">వారం</span>
+                    </h4>
+                    <p class="card-text fs-4 fw-bold text-pink mb-0">
+                      <span class="lang-en">Thursday</span>
+                      <span class="lang-te">గురువారం</span>
+                    </p>
+                  </div>
+                  
+                  <!-- Time Item -->
+                  <div class="col-12 col-md-4">
+                    <div class="card-illustration mb-3">
+                      <svg viewBox="0 0 100 100" class="theme-card-svg">
+                        <!-- Baby Bear Shaped Clock -->
+                        <!-- Ears -->
+                        <circle cx="32" cy="34" r="11" fill="#E6E6FA" stroke="#BA68C8" stroke-width="2"/>
+                        <circle cx="32" cy="34" r="6" fill="#FFC8DD"/>
+                        <circle cx="68" cy="34" r="11" fill="#E6E6FA" stroke="#BA68C8" stroke-width="2"/>
+                        <circle cx="68" cy="34" r="6" fill="#FFC8DD"/>
+                        <!-- Main Body -->
+                        <circle cx="50" cy="58" r="26" fill="#FFF" stroke="#BA68C8" stroke-width="3"/>
+                        <!-- Clock details -->
+                        <circle cx="50" cy="58" r="20" fill="#FFF8FC"/>
+                        <!-- Clock Hands (Pointing at 6:00) -->
+                        <line x1="50" y1="58" x2="50" y2="44" stroke="#4A3E3D" stroke-width="2.5" stroke-linecap="round"/>
+                        <line x1="50" y1="58" x2="50" y2="68" stroke="#E78895" stroke-width="2.5" stroke-linecap="round"/>
+                        <circle cx="50" cy="58" r="3" fill="#BA68C8"/>
+                        <!-- Golden Sparkles -->
+                        <polygon points="16,68 19,71 16,74 13,71" fill="#FFD700"/>
+                        <polygon points="84,68 87,71 84,74 81,71" fill="#FFD700"/>
+                      </svg>
+                    </div>
+                    <h4 class="card-subtitle mb-2">
+                      <span class="lang-en">Time</span>
+                      <span class="lang-te">సమయం</span>
+                    </h4>
+                    <p class="card-text fs-4 fw-bold text-pink mb-0">
+                      <span class="lang-en">6:00 PM Onwards</span>
+                      <span class="lang-te">సాయంత్రం 6:00 నుండి</span>
+                    </p>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- Single Scratch Layer Canvas overlay -->
+              <canvas class="scratch-canvas" id="scratch-date-time" data-card="datetime"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5. 1 to 12 Months Photo Journey Section -->
+    <section id="journey" class="journey-section py-5">
+      <div class="container text-center">
+        <h3 class="section-title mb-4">
+          <span class="lang-en">Dushya's 1st Year Milestones</span>
+          <span class="lang-te">దుష్య మొదటి సంవత్సరపు మైలురాళ్ళు</span>
+        </h3>
+        <p class="section-tagline mb-5">
+          <span class="lang-en">Watch our little angel grow month by month!</span>
+          <span class="lang-te">మా బుజ్జి దేవత నెలనెలా ఎలా పెరిగిందో చూడండి!</span>
+        </p>
+        
+        <div class="row g-4 justify-content-center" id="milestones-grid">
+          <!-- 12 Milestone Cards loaded dynamically or statically with vector icons representing baby items -->
+          <!-- Card 1 -->
+          <div class="col-12 col-sm-6 col-lg-3">
+            <div class="milestone-card shadow-sm p-3 h-100">
+              <div class="milestone-img-placeholder mb-3">
+                <svg viewBox="0 0 100 100" class="milestone-svg">
+                  <!-- Rattle -->
+                  <circle cx="50" cy="50" r="42" fill="#FFEAEF"/>
+                  <path d="M50,45 L50,75 M46,75 L54,75 M50,75 C47,75 47,82 50,82 C53,82 53,75 50,75 Z" stroke="#FFB6C1" stroke-width="4" stroke-linecap="round"/>
+                  <circle cx="50" cy="35" r="18" fill="#FFB6C1" stroke="#FF69B4" stroke-width="2"/>
+                  <circle cx="50" cy="35" r="10" fill="#FFEAEF"/>
+                  <circle cx="50" cy="18" r="4" fill="#DAA520"/>
+                  <circle cx="32" cy="35" r="4" fill="#DAA520"/>
+                  <circle cx="68" cy="35" r="4" fill="#DAA520"/>
+                </svg>
+              </div>
+              <h5 class="milestone-title">
+                <span class="lang-en">1 Month</span>
+                <span class="lang-te">1వ నెల</span>
+              </h5>
+              <p class="milestone-caption">
+                <span class="lang-en">First smile & sweet dreams</span>
+                <span class="lang-te">మొదటి చిరునవ్వు, తీపి కలలు</span>
+              </p>
+            </div>
+          </div>
+          <!-- Card 2 -->
+          <div class="col-12 col-sm-6 col-lg-3">
+            <div class="milestone-card shadow-sm p-3 h-100">
+              <div class="milestone-img-placeholder mb-3">
+                <svg viewBox="0 0 100 100" class="milestone-svg">
+                  <!-- Milk Bottle -->
+                  <circle cx="50" cy="50" r="42" fill="#E6F2FF"/>
+                  <rect x="40" y="35" width="20" height="35" rx="4" fill="#FFF" stroke="#64B5F6" stroke-width="3"/>
+                  <path d="M43,35 L43,70 M47,35 L47,70 M57,35 L57,70" stroke="#64B5F6" stroke-dasharray="3,3" stroke-width="1.5"/>
+                  <path d="M42,35 L58,35 L55,27 L45,27 Z" fill="#64B5F6"/>
+                  <path d="M47,27 C47,20 53,20 53,27 Z" fill="#FFB74D"/>
+                </svg>
+              </div>
+              <h5 class="milestone-title">
+                <span class="lang-en">2 Months</span>
+                <span class="lang-te">2వ నెల</span>
+              </h5>
+              <p class="milestone-caption">
+                <span class="lang-en">Learning to coo and babble</span>
+                <span class="lang-te">ముద్దు ముద్దు మాటలు, కిలకిల నవ్వులు</span>
+              </p>
+            </div>
+          </div>
+          <!-- Card 3 -->
+          <div class="col-12 col-sm-6 col-lg-3">
+            <div class="milestone-card shadow-sm p-3 h-100">
+              <div class="milestone-img-placeholder mb-3">
+                <svg viewBox="0 0 100 100" class="milestone-svg">
+                  <!-- Baby Booties -->
+                  <circle cx="50" cy="50" r="42" fill="#F3E5F5"/>
+                  <g transform="translate(25, 28) scale(0.9)">
+                    <path d="M12,30 C6,30 2,26 2,20 C2,12 8,8 15,8 C22,8 24,15 28,15 L35,15 C42,15 45,22 45,28 C45,34 38,36 30,36 Z" fill="#BA68C8" opacity="0.8"/>
+                    <ellipse cx="25" cy="20" rx="6" ry="10" fill="#FFF"/>
+                    <circle cx="35" cy="28" r="4" fill="#DAA520"/>
+                  </g>
+                </svg>
+              </div>
+              <h5 class="milestone-title">
+                <span class="lang-en">3 Months</span>
+                <span class="lang-te">3వ నెల</span>
+              </h5>
+              <p class="milestone-caption">
+                <span class="lang-en">Reaching out to touch the world</span>
+                <span class="lang-te">చేతులతో లోకాన్ని తాకే ప్రయత్నం</span>
+              </p>
+            </div>
+          </div>
+          <!-- Card 4 -->
+          <div class="col-12 col-sm-6 col-lg-3">
+            <div class="milestone-card shadow-sm p-3 h-100">
+              <div class="milestone-img-placeholder mb-3">
+                <svg viewBox="0 0 100 100" class="milestone-svg">
+                  <!-- Pacifier -->
+                  <circle cx="50" cy="50" r="42" fill="#E8F5E9"/>
+                  <circle cx="50" cy="65" r="14" fill="none" stroke="#81C784" stroke-width="4"/>
+                  <ellipse cx="50" cy="42" rx="18" ry="8" fill="#FFF" stroke="#81C784" stroke-width="3"/>
+                  <path d="M50,34 C43,34 40,22 50,22 C60,22 57,34 50,34 Z" fill="#FFB74D"/>
+                </svg>
+              </div>
+              <h5 class="milestone-title">
+                <span class="lang-en">4 Months</span>
+                <span class="lang-te">4వ నెల</span>
+              </h5>
+              <p class="milestone-caption">
+                <span class="lang-en">Giggling and rolling over</span>
+                <span class="lang-te">బోర్లా పడటం, కిలకిల నవ్వులు</span>
+              </p>
+            </div>
+          </div>
+          <!-- Card 5 -->
+          <div class="col-12 col-sm-6 col-lg-3">
+            <div class="milestone-card shadow-sm p-3 h-100">
+              <div class="milestone-img-placeholder mb-3">
+                <svg viewBox="0 0 100 100" class="milestone-svg">
+                  <!-- Teddy Bear -->
+                  <circle cx="50" cy="50" r="42" fill="#FFF3E0"/>
+                  <!-- Ears -->
+                  <circle cx="35" cy="35" r="10" fill="#B07D62"/>
+                  <circle cx="35" cy="35" r="5" fill="#FFC8DD"/>
+                  <circle cx="65" cy="35" r="10" fill="#B07D62"/>
+                  <circle cx="65" cy="35" r="5" fill="#FFC8DD"/>
+                  <!-- Head -->
+                  <circle cx="50" cy="50" r="22" fill="#B07D62"/>
+                  <!-- Muzzle -->
+                  <ellipse cx="50" cy="56" rx="8" ry="6" fill="#FFF"/>
+                  <polygon points="50,52 47,56 53,56" fill="#4A3B32"/>
+                  <!-- Eyes -->
+                  <circle cx="43" cy="45" r="2.5" fill="#000"/>
+                  <circle cx="57" cy="45" r="2.5" fill="#000"/>
+                </svg>
+              </div>
+              <h5 class="milestone-title">
+                <span class="lang-en">5 Months</span>
+                <span class="lang-te">5వ నెల</span>
+              </h5>
+              <p class="milestone-caption">
+                <span class="lang-en">First tooth and holding toys</span>
+                <span class="lang-te">మొదటి పన్ను, ఆటబొమ్మలతో సరదాలు</span>
+              </p>
+            </div>
+          </div>
+          <!-- Card 6 -->
+          <div class="col-12 col-sm-6 col-lg-3">
+            <div class="milestone-card shadow-sm p-3 h-100">
+              <div class="milestone-img-placeholder mb-3">
+                <svg viewBox="0 0 100 100" class="milestone-svg">
+                  <!-- Baby Carriage -->
+                  <circle cx="50" cy="50" r="42" fill="#E0F7FA"/>
+                  <path d="M25,48 C25,32 40,30 55,30 C70,30 75,42 75,55 C75,64 64,68 50,68 C35,68 25,60 25,48 Z" fill="#4DD0E1" opacity="0.8"/>
+                  <path d="M25,48 L75,48" stroke="#00838F" stroke-width="2"/>
+                  <!-- Handle -->
+                  <path d="M28,48 L18,35 C18,35 12,38 15,42" fill="none" stroke="#8D6E63" stroke-width="3" stroke-linecap="round"/>
+                  <!-- Wheels -->
+                  <circle cx="38" cy="74" r="8" fill="#FFF" stroke="#8D6E63" stroke-width="3"/>
+                  <circle cx="38" cy="74" r="3" fill="#8D6E63"/>
+                  <circle cx="62" cy="74" r="8" fill="#FFF" stroke="#8D6E63" stroke-width="3"/>
+                  <circle cx="62" cy="74" r="3" fill="#8D6E63"/>
+                </svg>
+              </div>
+              <h5 class="milestone-title">
+                <span class="lang-en">6 Months</span>
+                <span class="lang-te">6వ నెల</span>
+              </h5>
+              <p class="milestone-caption">
+                <span class="lang-en">Sitting up all by myself</span>
+                <span class="lang-te">సహాయం లేకుండా కూర్చోవడం</span>
+              </p>
+            </div>
+          </div>
+          <!-- Card 7 -->
+          <div class="col-12 col-sm-6 col-lg-3">
+            <div class="milestone-card shadow-sm p-3 h-100">
+              <div class="milestone-img-placeholder mb-3">
+                <svg viewBox="0 0 100 100" class="milestone-svg">
+                  <!-- Stacking Blocks -->
+                  <circle cx="50" cy="50" r="42" fill="#F1F8E9"/>
+                  <!-- Block A -->
+                  <rect x="25" y="55" width="22" height="22" rx="3" fill="#81C784" stroke="#4CAF50" stroke-width="1.5"/>
+                  <text x="36" y="71" fill="#FFF" font-family="Arial" font-weight="bold" font-size="14" text-anchor="middle">A</text>
+                  <!-- Block B -->
+                  <rect x="53" y="55" width="22" height="22" rx="3" fill="#64B5F6" stroke="#2196F3" stroke-width="1.5"/>
+                  <text x="64" y="71" fill="#FFF" font-family="Arial" font-weight="bold" font-size="14" text-anchor="middle">B</text>
+                  <!-- Block 1 -->
+                  <rect x="39" y="31" width="22" height="22" rx="3" fill="#FF8A65" stroke="#FF5722" stroke-width="1.5"/>
+                  <text x="50" y="47" fill="#FFF" font-family="Arial" font-weight="bold" font-size="14" text-anchor="middle">1</text>
+                </svg>
+              </div>
+              <h5 class="milestone-title">
+                <span class="lang-en">7 Months</span>
+                <span class="lang-te">7వ నెల</span>
+              </h5>
+              <p class="milestone-caption">
+                <span class="lang-en">Waving hi & tasting baby food</span>
+                <span class="lang-te">చేతులు ఊపుతూ పలకరించడం, ఆహారం రుచి చూడటం</span>
+              </p>
+            </div>
+          </div>
+          <!-- Card 8 -->
+          <div class="col-12 col-sm-6 col-lg-3">
+            <div class="milestone-card shadow-sm p-3 h-100">
+              <div class="milestone-img-placeholder mb-3">
+                <svg viewBox="0 0 100 100" class="milestone-svg">
+                  <!-- Golden Crown -->
+                  <circle cx="50" cy="50" r="42" fill="#FFFDE7"/>
+                  <path d="M22,65 L78,65 L72,32 L58,50 L50,22 L42,50 L28,32 Z" fill="url(#goldGrad)" stroke="#DAA520" stroke-width="1"/>
+                  <circle cx="50" cy="18" r="3.5" fill="#DAA520"/>
+                  <circle cx="28" cy="28" r="3" fill="#DAA520"/>
+                  <circle cx="72" cy="28" r="3" fill="#DAA520"/>
+                  <ellipse cx="50" cy="65" rx="28" ry="4" fill="#DAA520" opacity="0.3"/>
+                  <defs>
+                    <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" stop-color="#FFE259" />
+                      <stop offset="100%" stop-color="#FFA751" />
+                    </linearGradient>
+                  </defs>
+                </svg>
+              </div>
+              <h5 class="milestone-title">
+                <span class="lang-en">8 Months</span>
+                <span class="lang-te">8వ నెల</span>
+              </h5>
+              <p class="milestone-caption">
+                <span class="lang-en">Babbling 'Mama' and 'Dada'</span>
+                <span class="lang-te">అమ్మా, నాన్న అని పిలవడం</span>
+              </p>
+            </div>
+          </div>
+          <!-- Card 9 -->
+          <div class="col-12 col-sm-6 col-lg-3">
+            <div class="milestone-card shadow-sm p-3 h-100">
+              <div class="milestone-img-placeholder mb-3">
+                <svg viewBox="0 0 100 100" class="milestone-svg">
+                  <!-- Birthday Balloon -->
+                  <circle cx="50" cy="50" r="42" fill="#F3E5F5"/>
+                  <path d="M50,58 L50,82 C50,85 45,86 48,90" fill="none" stroke="#AB47BC" stroke-width="2"/>
+                  <path d="M32,38 C32,22 42,15 50,15 C58,15 68,22 68,38 C68,54 58,60 50,60 C42,60 32,54 32,38 Z" fill="#BA68C8" stroke="#AB47BC" stroke-width="1.5"/>
+                  <polygon points="50,60 46,65 54,65" fill="#AB47BC"/>
+                  <!-- Highlight -->
+                  <ellipse cx="42" cy="28" rx="3" ry="7" transform="rotate(-30 42 28)" fill="#FFF" opacity="0.6"/>
+                </svg>
+              </div>
+              <h5 class="milestone-title">
+                <span class="lang-en">9 Months</span>
+                <span class="lang-te">9వ నెల</span>
+              </h5>
+              <p class="milestone-caption">
+                <span class="lang-en">Crawling & exploring everywhere</span>
+                <span class="lang-te">పాకుతూ ఇల్లంతా తిరగడం</span>
+              </p>
+            </div>
+          </div>
+          <!-- Card 10 -->
+          <div class="col-12 col-sm-6 col-lg-3">
+            <div class="milestone-card shadow-sm p-3 h-100">
+              <div class="milestone-img-placeholder mb-3">
+                <svg viewBox="0 0 100 100" class="milestone-svg">
+                  <!-- Butterfly -->
+                  <circle cx="50" cy="50" r="42" fill="#E0F2F1"/>
+                  <g transform="translate(18, 18) scale(1.3)">
+                    <!-- Wings -->
+                    <path d="M24,24 C14,14 10,22 15,26 C12,30 14,38 24,30" fill="#4DB6AC"/>
+                    <path d="M26,24 C36,14 40,22 35,26 C38,30 36,38 26,30" fill="#4DB6AC"/>
+                    <!-- Small inner wings -->
+                    <path d="M24,24 C17,17 14,22 18,25 C15,28 17,33 24,28" fill="#FFF" opacity="0.6"/>
+                    <path d="M26,24 C33,17 36,22 32,25 C35,28 33,33 26,28" fill="#FFF" opacity="0.6"/>
+                    <!-- Body -->
+                    <ellipse cx="25" cy="26" rx="2" ry="10" fill="#00695C"/>
+                    <circle cx="25" cy="14" r="2.5" fill="#00695C"/>
+                    <path d="M24,12 C23,8 20,8 21,5 M26,12 C27,8 30,8 29,5" stroke="#00695C" stroke-width="1" fill="none"/>
+                  </g>
+                </svg>
+              </div>
+              <h5 class="milestone-title">
+                <span class="lang-en">10 Months</span>
+                <span class="lang-te">10వ నెల</span>
+              </h5>
+              <p class="milestone-caption">
+                <span class="lang-en">Standing tall with support</span>
+                <span class="lang-te">ఆధారంతో నిలబడటం</span>
+              </p>
+            </div>
+          </div>
+          <!-- Card 11 -->
+          <div class="col-12 col-sm-6 col-lg-3">
+            <div class="milestone-card shadow-sm p-3 h-100">
+              <div class="milestone-img-placeholder mb-3">
+                <svg viewBox="0 0 100 100" class="milestone-svg animate-pulse">
+                  <!-- Glowing Star -->
+                  <circle cx="50" cy="50" r="42" fill="#FFF9C4"/>
+                  <polygon points="50,15 62,38 88,42 69,61 74,87 50,75 26,87 31,61 12,42 38,38" fill="#FBC02D" stroke="#F57F17" stroke-width="2"/>
+                  <!-- Sparkles -->
+                  <circle cx="25" cy="22" r="2" fill="#FFF"/>
+                  <circle cx="75" cy="22" r="2" fill="#FFF"/>
+                  <circle cx="50" cy="72" r="2" fill="#FFF" opacity="0.5"/>
+                </svg>
+              </div>
+              <h5 class="milestone-title">
+                <span class="lang-en">11 Months</span>
+                <span class="lang-te">11వ నెల</span>
+              </h5>
+              <p class="milestone-caption">
+                <span class="lang-en">Taking my very first steps</span>
+                <span class="lang-te">మొదటి అడుగులు వేయడం</span>
+              </p>
+            </div>
+          </div>
+          <!-- Card 12 -->
+          <div class="col-12 col-sm-6 col-lg-3">
+            <div class="milestone-card shadow-sm p-3 h-100 highlighted-card">
+              <div class="milestone-img-placeholder mb-3">
+                <svg viewBox="0 0 100 100" class="milestone-svg">
+                  <!-- Birthday Cake -->
+                  <circle cx="50" cy="50" r="42" fill="#FCE4EC"/>
+                  <!-- Platter -->
+                  <ellipse cx="50" cy="80" rx="35" ry="6" fill="#CFD8DC"/>
+                  <!-- Base Layer -->
+                  <path d="M22,76 L78,76 L74,56 L26,56 Z" fill="#E8F5E9" stroke="#81C784" stroke-width="1.5"/>
+                  <!-- Frosting decoration -->
+                  <path d="M22,56 C26,60 30,60 34,56 C38,60 42,60 46,56 C50,60 54,60 58,56 C62,60 66,60 70,56 C74,60 78,60 78,56" fill="none" stroke="#FF4081" stroke-width="3" stroke-linecap="round"/>
+                  <!-- Top Layer -->
+                  <path d="M28,56 L72,56 L68,38 L32,38 Z" fill="#FFF" stroke="#FF4081" stroke-width="1.5"/>
+                  <!-- Candle -->
+                  <rect x="48" y="24" width="4" height="14" fill="#BBDEFB" stroke="#1976D2" stroke-width="1"/>
+                  <path d="M50,15 C52,18 50,24 50,24 C50,24 48,18 50,15 Z" fill="#FF9100"/>
+                </svg>
+              </div>
+              <h5 class="milestone-title text-pink">
+                <span class="lang-en">👑 12 Months!</span>
+                <span class="lang-te">👑 12వ నెల!</span>
+              </h5>
+              <p class="milestone-caption">
+                <span class="lang-en">Yay! I'm turning ONE today!</span>
+                <span class="lang-te">సందడిగా మొదటి పుట్టినరోజు వేడుక!</span>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 6. Memories Gallery Section -->
+    <section id="gallery" class="gallery-section py-5">
+      <div class="container text-center">
+        <h3 class="section-title mb-4">
+          <span class="lang-en">Sweet Memories Gallery</span>
+          <span class="lang-te">తీపి జ్ఞాపకాల గ్యాలరీ</span>
+        </h3>
+        <p class="section-tagline mb-5">
+          <span class="lang-en">Capturing special chapters of our little princess</span>
+          <span class="lang-te">మా చిన్న రాజకుమారి జీవితంలోని కొన్ని అమూల్యమైన ఘట్టాలు</span>
+        </p>
+        
+        <div class="row g-4">
+          <!-- Memory 1 -->
+          <div class="col-12 col-md-4">
+            <div class="gallery-card shadow-sm overflow-hidden position-relative">
+              <div class="gallery-vector-icon p-5">
+                <svg viewBox="0 0 100 100" width="80" height="80">
+                  <!-- Cute baby crib/cradle -->
+                  <path d="M15,25 L15,75 M85,25 L85,75 M15,40 L85,40 M15,65 L85,65 M25,40 L25,65 M35,40 L35,65 M45,40 L45,65 M55,40 L55,65 M65,40 L65,65 M75,40 L75,65" stroke="#BA68C8" stroke-width="3" stroke-linecap="round" fill="none"/>
+                  <path d="M10,75 C20,80 30,80 40,75 M60,75 C70,80 80,80 90,75" stroke="#BA68C8" stroke-width="3" stroke-linecap="round" fill="none"/>
+                </svg>
+              </div>
+              <div class="gallery-hover-overlay">
+                <h5 class="gallery-title">
+                  <span class="lang-en">First Bath Time</span>
+                  <span class="lang-te">మొదటి సారి స్నానం</span>
+                </h5>
+                <p class="gallery-desc">
+                  <span class="lang-en">Splashing water and sweet giggles</span>
+                  <span class="lang-te">నీటి చుక్కల ఆటలు, చిన్నారి నవ్వులు</span>
+                </p>
+              </div>
+            </div>
+          </div>
+          <!-- Memory 2 -->
+          <div class="col-12 col-md-4">
+            <div class="gallery-card shadow-sm overflow-hidden position-relative">
+              <div class="gallery-vector-icon p-5">
+                <svg viewBox="0 0 100 100" width="80" height="80">
+                  <!-- Sleeping Moon / Sleepy princess -->
+                  <path d="M75,60 C65,75 40,75 25,60 C15,45 22,20 40,15 C30,22 28,42 42,55 C52,65 70,62 75,60 Z" fill="#FBC02D" stroke="#F57F17" stroke-width="2"/>
+                  <!-- Small sleeping cloud -->
+                  <path d="M35,65 C32,65 30,62 32,58 C34,54 44,54 46,58 C48,62 45,65 35,65 Z" fill="#E1F5FE" opacity="0.9"/>
+                </svg>
+              </div>
+              <div class="gallery-hover-overlay">
+                <h5 class="gallery-title">
+                  <span class="lang-en">Sleepy Princess</span>
+                  <span class="lang-te">నిదురపోతున్న దేవత</span>
+                </h5>
+                <p class="gallery-desc">
+                  <span class="lang-en">Dreaming of rainbows and fairy dust</span>
+                  <span class="lang-te">ఇంద్రధనస్సులు, దేవతల లోకంలో విహారం</span>
+                </p>
+              </div>
+            </div>
+          </div>
+          <!-- Memory 3 -->
+          <div class="col-12 col-md-4">
+            <div class="gallery-card shadow-sm overflow-hidden position-relative">
+              <div class="gallery-vector-icon p-5">
+                <svg viewBox="0 0 100 100" width="80" height="80">
+                  <!-- Butterfly garden -->
+                  <path d="M30,70 Q45,25 45,25 Q55,75 55,75" stroke="#81C784" stroke-width="3" fill="none"/>
+                  <circle cx="45" cy="25" r="5" fill="#E8F5E9" stroke="#81C784" stroke-width="2"/>
+                  <path d="M70,30 C60,20 60,35 68,38 C60,45 75,45 70,30 Z" fill="#F06292"/>
+                </svg>
+              </div>
+              <div class="gallery-hover-overlay">
+                <h5 class="gallery-title">
+                  <span class="lang-en">Grandparents' Joy</span>
+                  <span class="lang-te">అమ్మమ్మ, తాతయ్యల గారాబం</span>
+                </h5>
+                <p class="gallery-desc">
+                  <span class="lang-en">Wrapped in endless love and warmth</span>
+                  <span class="lang-te">అంతులేని ప్రేమ, మధురమైన లాలన</span>
+                </p>
+              </div>
+            </div>
+          </div>
+          <!-- Memory 4 -->
+          <div class="col-12 col-md-4">
+            <div class="gallery-card shadow-sm overflow-hidden position-relative">
+              <div class="gallery-vector-icon p-5">
+                <svg viewBox="0 0 100 100" width="80" height="80">
+                  <!-- Baby Toy Car / Blocks -->
+                  <rect x="25" y="45" width="50" height="25" rx="5" fill="#4FC3F7" stroke="#0288D1" stroke-width="2"/>
+                  <circle cx="38" cy="70" r="10" fill="#FFF" stroke="#0288D1" stroke-width="3"/>
+                  <circle cx="62" cy="70" r="10" fill="#FFF" stroke="#0288D1" stroke-width="3"/>
+                  <path d="M35,45 L45,28 L65,28 L70,45 Z" fill="#E1F5FE" stroke="#0288D1" stroke-width="2"/>
+                </svg>
+              </div>
+              <div class="gallery-hover-overlay">
+                <h5 class="gallery-title">
+                  <span class="lang-en">First Play Time</span>
+                  <span class="lang-te">మొదటి ఆటలు</span>
+                </h5>
+                <p class="gallery-desc">
+                  <span class="lang-en">Chasing toys and sweet babbling</span>
+                  <span class="lang-te">బొమ్మల కోసం పరుగులు, ముద్దు మాటలు</span>
+                </p>
+              </div>
+            </div>
+          </div>
+          <!-- Memory 5 -->
+          <div class="col-12 col-md-4">
+            <div class="gallery-card shadow-sm overflow-hidden position-relative">
+              <div class="gallery-vector-icon p-5">
+                <svg viewBox="0 0 100 100" width="80" height="80">
+                  <!-- Hearts / Love -->
+                  <path d="M50,30 C50,30 40,15 25,25 C10,35 25,65 50,80 C75,65 90,35 75,25 C60,15 50,30 50,30 Z" fill="#FF8A80" stroke="#FF5252" stroke-width="2"/>
+                  <path d="M65,45 C65,45 60,38 53,42 C48,46 55,60 65,65 C75,60 82,46 77,42 C70,38 65,45 65,45 Z" fill="#FFC0CB" opacity="0.8"/>
+                </svg>
+              </div>
+              <div class="gallery-hover-overlay">
+                <h5 class="gallery-title">
+                  <span class="lang-en">First Festival Outfit</span>
+                  <span class="lang-te">మొదటి పండుగ ముస్తాబు</span>
+                </h5>
+                <p class="gallery-desc">
+                  <span class="lang-en">Twirling in her cute little lehenga</span>
+                  <span class="lang-te">ముద్దుల లంగావోణీలో మురిసిపోతూ...</span>
+                </p>
+              </div>
+            </div>
+          </div>
+          <!-- Memory 6 -->
+          <div class="col-12 col-md-4">
+            <div class="gallery-card shadow-sm overflow-hidden position-relative">
+              <div class="gallery-vector-icon p-5">
+                <svg viewBox="0 0 100 100" width="80" height="80">
+                  <!-- Baby Footprints -->
+                  <g transform="translate(18, 15) scale(1.1)">
+                    <ellipse cx="25" cy="50" rx="9" ry="15" fill="#FFE082" stroke="#FFB300" stroke-width="1.5" transform="rotate(-15 25 50)"/>
+                    <circle cx="16" cy="28" r="3.5" fill="#FFB300"/>
+                    <circle cx="23" cy="24" r="3.5" fill="#FFB300"/>
+                    <circle cx="31" cy="26" r="3" fill="#FFB300"/>
+                    <circle cx="37" cy="30" r="2.5" fill="#FFB300"/>
+                    
+                    <ellipse cx="45" cy="45" rx="9" ry="15" fill="#FFD54F" stroke="#FFB300" stroke-width="1.5" transform="rotate(15 45 45)"/>
+                    <circle cx="37" cy="23" r="3.5" fill="#FFB300"/>
+                    <circle cx="44" cy="19" r="3.5" fill="#FFB300"/>
+                    <circle cx="52" cy="21" r="3" fill="#FFB300"/>
+                    <circle cx="58" cy="25" r="2.5" fill="#FFB300"/>
+                  </g>
+                </svg>
+              </div>
+              <div class="gallery-hover-overlay">
+                <h5 class="gallery-title">
+                  <span class="lang-en">Tiny Footprints</span>
+                  <span class="lang-te">చిన్ని చిన్ని అడుగులు</span>
+                </h5>
+                <p class="gallery-desc">
+                  <span class="lang-en">Stepping into a lifetime of wonder</span>
+                  <span class="lang-te">అద్భుతమైన భవిష్యత్తు వైపు తొలి అడుగు</span>
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 7. Invitation Message from Parents -->
+    <section id="invitation-message" class="invitation-message-section py-5 text-center position-relative">
+      <div class="container py-4">
+        <div class="row justify-content-center">
+          <div class="col-12 col-md-10 col-lg-8">
+            <div class="message-card shadow p-4 p-md-5">
+              <div class="message-quote-icon mb-3">
+                <i class="fa-solid fa-heart text-pink animate-pulse"></i>
+              </div>
+              
+              <h3 class="section-title mb-4">
+                <span class="lang-en">With Love & Gratitude</span>
+                <span class="lang-te">ప్రేమాభివందనాలతో</span>
+              </h3>
+              
+              <!-- English Message -->
+              <div class="message-content lang-en text-muted fs-5 lh-lg">
+                <p>One year ago, our lives were filled with beautiful magic and endless joy when our baby girl <strong>Dushya</strong> entered our world. Watching her take tiny steps, giggle, and explore has been the greatest adventure of our lives.</p>
+                <p>As our little princess turns <strong>ONE</strong>, we warmly invite you and your family to join us in showering her with your love, blessings, and good wishes on this milestone celebration.</p>
+                <p class="mt-4 fw-bold text-pink fs-4">With love, <br>Dimple Srivani & Kiran Kumar <br><span class="fs-6 text-muted">(Proud Parents)</span></p>
+              </div>
+              
+              <!-- Telugu Message -->
+              <div class="message-content lang-te text-muted fs-5 lh-lg">
+                <p>సరిగ్గా ఒక సంవత్సరం క్రితం, మా చిన్నారి <strong>దుష్య</strong> మా జీవితాల్లోకి అడుగుపెట్టినప్పుడు మా ఇల్లు ఎనలేని ఆనందంతో నిండిపోయింది. తను వేసే చిన్ని చిన్ని అడుగులు, ముద్దు నవ్వులు మా జీవితంలో అత్యంత మధురమైన జ్ఞాపకాలుగా నిలిచాయి.</p>
+                <p>మా చిట్టి రాకుమారి <strong>మొదటి పుట్టినరోజు</strong> జరుపుకుంటున్న ఈ శుభ తరుణంలో, మా పాపాయిని ఆశీర్వదించడానికి మీ కుటుంబ సమేతంగా విచ్చేసి మా ఆనందంలో భాగస్వాములు కావాలని మనస్ఫూర్తిగా ఆహ్వానిస్తున్నాము.</p>
+                <p class="mt-4 fw-bold text-pink fs-4">ప్రేమతో, <br>డింపుల్ శ్రీవాణి & కిరణ్ కుమార్ <br><span class="fs-6 text-muted">(తల్లిదండ్రులు)</span></p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 8. Event Details Section -->
+    <section id="event-details" class="event-details-section py-5 bg-soft">
+      <div class="container text-center">
+        <h3 class="section-title mb-5">
+          <span class="lang-en">Event Venue & Details</span>
+          <span class="lang-te">వేడుక వివరాలు & వేదిక</span>
+        </h3>
+        
+        <div class="row justify-content-center g-4">
+          <!-- Venue Details Card -->
+          <div class="col-12 col-md-6 col-lg-5">
+            <div class="venue-card shadow-sm p-4 h-100">
+              <div class="venue-icon mb-3">
+                <i class="fa-solid fa-hotel text-gold"></i>
+              </div>
+              <h4 class="card-subtitle mb-3">
+                <span class="lang-en">Celebration Venue</span>
+                <span class="lang-te">కళ్యాణ వేదిక</span>
+              </h4>
+              <p class="venue-name fs-4 fw-bold text-pink mb-2">
+                <span class="lang-en">Grand Celebration Hall</span>
+                <span class="lang-te">గ్రాండ్ సెలబ్రేషన్ హాల్</span>
+              </p>
+              <p class="venue-address text-muted">
+                <span class="lang-en">Plot No. 123, Road No. 10,<br>Jubilee Hills, Hyderabad, Telangana - 500033</span>
+                <span class="lang-te">ప్లాట్ నెం. 123, రోడ్ నెం. 10,<br>జూబ్లీహిల్స్, హైదరాబాద్, తెలంగాణ - 500033</span>
+              </p>
+            </div>
+          </div>
+          
+          <!-- Key Timings Card -->
+          <div class="col-12 col-md-6 col-lg-5">
+            <div class="venue-card shadow-sm p-4 h-100">
+              <div class="venue-icon mb-3">
+                <i class="fa-solid fa-bell text-gold"></i>
+              </div>
+              <h4 class="card-subtitle mb-3">
+                <span class="lang-en">Key Timings</span>
+                <span class="lang-te">ముఖ్య సమయాలు</span>
+              </h4>
+              <ul class="list-unstyled venue-timings text-muted text-start mx-auto" style="max-width: 280px;">
+                <li class="mb-2">
+                  <strong class="text-pink">6:00 PM:</strong> 
+                  <span class="lang-en">Welcome Drinks</span>
+                  <span class="lang-te">స్వాగత పానీయాలు</span>
+                </li>
+                <li class="mb-2">
+                  <strong class="text-pink">7:00 PM:</strong> 
+                  <span class="lang-en">Cake Cutting Ritual</span>
+                  <span class="lang-te">కేక్ కటింగ్ వేడుక</span>
+                </li>
+                <li class="mb-2">
+                  <strong class="text-pink">8:00 PM:</strong> 
+                  <span class="lang-en">Royal Buffet Dinner</span>
+                  <span class="lang-te">రాజ విందు భోజనం</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 9. Google Map Section -->
+    <section id="google-map" class="map-section py-5">
+      <div class="container text-center">
+        <div class="row justify-content-center">
+          <div class="col-12 col-md-10 col-lg-8">
+            <div class="map-card shadow-sm p-4">
+              <div class="map-icon mb-3 animate-float">
+                <i class="fa-solid fa-map-location-dot text-pink fs-1"></i>
+              </div>
+              <h3 class="card-subtitle mb-3">
+                <span class="lang-en">Find the Location</span>
+                <span class="lang-te">మా చిరునామా తెలుసుకోండి</span>
+              </h3>
+              <p class="text-muted mb-4">
+                <span class="lang-en">Click below to open the location on Google Maps and find the easiest route to the venue.</span>
+                <span class="lang-te">వేడుక వేదికను గూగుల్ మ్యాప్స్ లో సులభంగా కనుగొనడానికి క్రింది బటన్ పై క్లిక్ చేయండి.</span>
+              </p>
+              
+              <!-- Clean Direct Link Button to Given Map URL -->
+              <a href="https://www.google.com/maps/place/Sree+Balaji+Conventions/@17.8022664,83.3632104,17z/data=!3m1!4b1!4m6!3m5!1s0x3a395b002c6e7535:0x38755f84ca1456fc!8m2!3d17.8022664!4d83.3657853!16s%2Fg%2F11n3c2z3mk?hl=en-GB&entry=ttu&g_ep=EgoyMDI2MDYyOS4wIKXMDSoASAFQAw%3D%3D" target="_blank" class="btn btn-gold btn-lg shadow-sm" rel="noopener noreferrer">
+                <i class="fa-solid fa-location-arrow me-2"></i>
+                <span class="lang-en">View Location on Google Maps</span>
+                <span class="lang-te">Google Maps లో స్థలాన్ని చూడండి</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 10. Event Schedule Section -->
+    <section id="schedule" class="schedule-section py-5 bg-soft">
+      <div class="container">
+        <h3 class="section-title text-center mb-5">
+          <span class="lang-en">Celebration Program</span>
+          <span class="lang-te">వేడుకల కార్యక్రమ పట్టిక</span>
+        </h3>
+        
+        <div class="timeline-wrapper mx-auto">
+          <!-- Timeline Item 1 -->
+          <div class="timeline-item">
+            <div class="timeline-badge">
+              <i class="fa-solid fa-glass-water"></i>
+            </div>
+            <div class="timeline-card-body shadow-sm">
+              <span class="timeline-time">6:00 PM</span>
+              <h4 class="timeline-title">
+                <span class="lang-en">Warm Welcome & Drinks</span>
+                <span class="lang-te">స్వాగతం & పానీయాలు</span>
+              </h4>
+              <p class="timeline-desc text-muted">
+                <span class="lang-en">Enjoy refreshing drinks and greetings as we welcome you to the party.</span>
+                <span class="lang-te">వేడుకకు విచ్చేసిన అతిథులకు చల్లని పానీయాలతో సాదర స్వాగతం.</span>
+              </p>
+            </div>
+          </div>
+          
+          <!-- Timeline Item 2 -->
+          <div class="timeline-item">
+            <div class="timeline-badge">
+              <i class="fa-solid fa-wand-magic-sparkles"></i>
+            </div>
+            <div class="timeline-card-body shadow-sm">
+              <span class="timeline-time">6:30 PM</span>
+              <h4 class="timeline-title">
+                <span class="lang-en">Dushya’s Grand Entry</span>
+                <span class="lang-te">రాకుమారి గ్రాండ్ ఎంట్రీ</span>
+              </h4>
+              <p class="timeline-desc text-muted">
+                <span class="lang-en">Our little birthday girl makes her magical entrance in her princess gown.</span>
+                <span class="lang-te">మా చిట్టి రాకుమారి దుష్య తన అందమైన దుస్తులతో వేదికపైకి రాక.</span>
+              </p>
+            </div>
+          </div>
+          
+          <!-- Timeline Item 3 -->
+          <div class="timeline-item">
+            <div class="timeline-badge">
+              <i class="fa-solid fa-cake-candles"></i>
+            </div>
+            <div class="timeline-card-body shadow-sm">
+              <span class="timeline-time">7:00 PM</span>
+              <h4 class="timeline-title">
+                <span class="lang-en">Grand Cake Cutting</span>
+                <span class="lang-te">కేక్ కటింగ్ వేడుక</span>
+              </h4>
+              <p class="timeline-desc text-muted">
+                <span class="lang-en">Sing along as Dushya blows her very first birthday candle!</span>
+                <span class="lang-te">అందరి చప్పట్లు, పాటలతో దుష్య మొదటి పుట్టినరోజు కేక్ కటింగ్.</span>
+              </p>
+            </div>
+          </div>
+          
+          <!-- Timeline Item 4 -->
+          <div class="timeline-item">
+            <div class="timeline-badge">
+              <i class="fa-solid fa-icons"></i>
+            </div>
+            <div class="timeline-card-body shadow-sm">
+              <span class="timeline-time">7:30 PM</span>
+              <h4 class="timeline-title">
+                <span class="lang-en">Dance & Games</span>
+                <span class="lang-te">సాంస్కృతిక ఆటపాటలు</span>
+              </h4>
+              <p class="timeline-desc text-muted">
+                <span class="lang-en">Fun filled magic show, games for kids, and family dance performances.</span>
+                <span class="lang-te">పిల్లల కోసం మ్యాజిక్ షో, సరదా ఆటలు మరియు కుటుంబ సభ్యుల నృత్యాలు.</span>
+              </p>
+            </div>
+          </div>
+          
+          <!-- Timeline Item 5 -->
+          <div class="timeline-item">
+            <div class="timeline-badge">
+              <i class="fa-solid fa-utensils"></i>
+            </div>
+            <div class="timeline-card-body shadow-sm">
+              <span class="timeline-time">8:00 PM</span>
+              <h4 class="timeline-title">
+                <span class="lang-en">Delicious Dinner Feast</span>
+                <span class="lang-te">రాజ విందు భోజనం</span>
+              </h4>
+              <p class="timeline-desc text-muted">
+                <span class="lang-en">Savour a rich traditional and modern royal buffet spread prepared for you.</span>
+                <span class="lang-te">నోరూరించే రకరకాల సాంప్రదాయ, ఆధునిక వంటకాలతో కూడిన విందు.</span>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 11. Blessings Wall Section -->
+    <section id="blessings-wall" class="blessings-section py-5">
+      <div class="container">
+        <h3 class="section-title text-center mb-4">
+          <span class="lang-en">Blessings & Greetings Wall</span>
+          <span class="lang-te">ఆశీర్వాదాల గోడ</span>
+        </h3>
+        <p class="section-tagline text-center mb-5">
+          <span class="lang-en">Leave a sweet blessing message for our little princess!</span>
+          <span class="lang-te">మా చిట్టి తల్లి కోసం మీ ప్రేమపూర్వక ఆశీర్వాదాన్ని ఇక్కడ తెలియజేయండి!</span>
+        </p>
+        
+        <div class="row g-5">
+          <!-- Blessings Submission Form -->
+          <div class="col-12 col-lg-5">
+            <div class="blessings-form-card shadow-sm p-4">
+              <h4 class="form-title mb-4">
+                <span class="lang-en">Write a Blessing</span>
+                <span class="lang-te">మీ సందేశాన్ని రాయండి</span>
+              </h4>
+              <form id="blessing-form">
+                <div class="mb-3">
+                  <label for="guest-name" class="form-label">
+                    <span class="lang-en">Your Name</span>
+                    <span class="lang-te">మీ పేరు</span>
+                  </label>
+                  <input type="text" id="guest-name" class="form-control" placeholder="e.g., Uncle Srinivas / శీను బాబాయ్" required>
+                </div>
+                <div class="mb-3">
+                  <label for="blessing-msg" class="form-label">
+                    <span class="lang-en">Blessing Message</span>
+                    <span class="lang-te">ఆశీర్వాద సందేశం</span>
+                  </label>
+                  <textarea id="blessing-msg" class="form-control" rows="4" placeholder="Wishing you a life full of love, laughter, and health..." required></textarea>
+                </div>
+                <button type="submit" class="btn btn-pink w-100 shadow-sm py-2">
+                  <i class="fa-solid fa-paper-plane me-2"></i>
+                  <span class="lang-en">Send Blessings</span>
+                  <span class="lang-te">ఆశీర్వదించండి</span>
+                </button>
+              </form>
+            </div>
+          </div>
+          
+          <!-- Blessings Feed -->
+          <div class="col-12 col-lg-7">
+            <div class="blessings-feed-container" id="blessings-feed">
+              <!-- Dynamically populated cards appear here. Prepopulated cards are loaded from JS storage. -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 12. Final Thank You Section -->
+    <section id="thank-you" class="thank-you-section py-5 text-center overflow-hidden position-relative">
+      <!-- Twinkling Stars Background Elements -->
+      <div class="star twinkling-1">⭐</div>
+      <div class="star twinkling-2">⭐</div>
+      <div class="star twinkling-3">⭐</div>
+      
+      <div class="container py-5">
+        <div class="thank-you-card mx-auto p-4 p-md-5 shadow-sm">
+          <div class="thank-you-crown mb-3 animate-float">👑</div>
+          <h2 class="thank-you-title mb-4 font-serif">
+            <span class="lang-en">Thank You!</span>
+            <span class="lang-te">ధన్యవాదాలు!</span>
+          </h2>
+          <p class="thank-you-text fs-5 text-muted mb-4">
+            <span class="lang-en">Your presence and blessings are the greatest gift of all. We look forward to seeing you!</span>
+            <span class="lang-te">మీ అమూల్యమైన సమయం, ఆశీర్వాదాలు మాకు అత్యంత విలువైన కానుక. మీ రాక కోసం మేము నిరీక్షిస్తుంటాము!</span>
+          </p>
+          <div class="signature text-pink font-serif fs-3 mt-4">
+            <span class="lang-en">Dimple Srivani, Kiran Kumar & Family</span>
+            <span class="lang-te">డింపుల్ శ్రీవాణి, కిరణ్ కుమార్ & కుటుంబ సభ్యులు</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Bootstrap 5 Bundle JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- Custom Javascript -->
+  <script src="script.js"></script>
+</body>
+</html>
