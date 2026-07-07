@@ -38,8 +38,8 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // --- Countdown Timer Logic ---
-  // Event Date: July 16, 2026, 6:00 PM (18:00) IST
-  const targetDate = new Date("2026-07-16T18:00:00+05:30").getTime();
+  // Event Date: July 16, 2026, 11:00 AM (11:00) IST
+  const targetDate = new Date("2026-07-16T11:00:00+05:30").getTime();
 
   function updateCountdown() {
     const now = new Date().getTime();
@@ -464,78 +464,82 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // --- 1. Opening Reveal Envelope Action (Multi-stage Flow) ---
-  let envelopeStage = 'seal'; // 'seal' | 'flap' | 'card' | 'done'
+  // --- 1. Opening Reveal Envelope Action (Single-tap Automatic Flow) ---
+  let envelopeStage = 'seal'; // 'seal' | 'opening' | 'done'
   const waxSeal = document.getElementById('wax-seal');
   const revealInstruction = document.getElementById('reveal-instruction');
+  let isOpeningTriggered = false;
 
   function updateRevealInstructions() {
     document.querySelectorAll('.stage-instruction').forEach(el => el.classList.add('d-none'));
-    if (envelopeStage === 'flap') {
-      document.querySelectorAll('.flap-inst').forEach(el => el.classList.remove('d-none'));
-    } else if (envelopeStage === 'card') {
-      document.querySelectorAll('.card-inst').forEach(el => el.classList.remove('d-none'));
+    if (envelopeStage === 'opening') {
+      document.querySelectorAll('.opening-inst').forEach(el => el.classList.remove('d-none'));
     } else if (envelopeStage === 'done') {
       if (revealInstruction) revealInstruction.remove();
     }
   }
 
-  // Action 1: Tap Seal
-  waxSeal.addEventListener('click', (e) => {
-    e.stopPropagation(); // Stop click bubble to wrapper
-    if (envelopeStage !== 'seal') return;
+  function triggerEnvelopeOpening() {
+    if (isOpeningTriggered) return;
+    isOpeningTriggered = true;
 
+    // Step 1: Break the Wax Seal immediately
     playSynthSFX('break');
     waxSeal.classList.add('broken');
-    
-    envelopeStage = 'flap';
-    envelopeInteractive.setAttribute('data-stage', 'flap');
+    envelopeStage = 'opening';
     updateRevealInstructions();
-  });
 
-  // Action 2 & 3: Tap Envelope wrapper for flap open & card pull
-  envelopeInteractive.addEventListener('click', () => {
-    if (envelopeStage === 'flap') {
-      // Stage 2: Open top flap
+    // Step 2: Open top envelope flap automatically after 500ms
+    setTimeout(() => {
       playSynthSFX('rustle');
       envelopeInteractive.classList.add('flap-open');
-      
-      envelopeStage = 'card';
       envelopeInteractive.setAttribute('data-stage', 'card');
-      updateRevealInstructions();
-    } else if (envelopeStage === 'card') {
-      // Stage 3: Slide out invitation card
-      playSynthSFX('rustle');
-      envelopeInteractive.classList.add('card-pulled');
-      
-      envelopeStage = 'done';
-      envelopeInteractive.setAttribute('data-stage', 'done');
-      updateRevealInstructions();
 
-      // Trigger chimes melody box music
-      try {
-        musicBox.play();
-      } catch (e) {
-        console.log("Audio play blocked by browser:", e);
-      }
-
-      // Spawn full screen heart & sparkles explosion
-      spawnConfettiExplosion();
-      animateParticles();
-
-      // Transition to main layout
+      // Step 3: Slide out invitation card automatically after another 800ms (flap animation duration)
       setTimeout(() => {
-        revealScreen.classList.add('fade-out');
-        mainContent.classList.remove('d-none');
-        
-        // Initialize scratch canvases now that mainContent is visible and has dimensions!
-        initScratchCards();
-      }, 1500);
+        playSynthSFX('rustle');
+        envelopeInteractive.classList.add('card-pulled');
+        envelopeStage = 'done';
+        envelopeInteractive.setAttribute('data-stage', 'done');
+        updateRevealInstructions();
 
-      setTimeout(() => {
-        revealScreen.remove();
-      }, 2600);
-    }
+        // Trigger chimes melody box music
+        try {
+          musicBox.play();
+        } catch (e) {
+          console.log("Audio play blocked by browser:", e);
+        }
+
+        // Spawn full screen heart & sparkles explosion
+        spawnConfettiExplosion();
+        animateParticles();
+
+        // Transition to main layout
+        setTimeout(() => {
+          revealScreen.classList.add('fade-out');
+          mainContent.classList.remove('d-none');
+          
+          // Initialize scratch canvases now that mainContent is visible and has dimensions!
+          initScratchCards();
+        }, 1500);
+
+        setTimeout(() => {
+          revealScreen.remove();
+        }, 2600);
+
+      }, 800);
+
+    }, 500);
+  }
+
+  // Trigger automated opening flow on clicking the wax seal or the envelope itself
+  waxSeal.addEventListener('click', (e) => {
+    e.stopPropagation(); // Prevent duplicate bubble trigger
+    triggerEnvelopeOpening();
+  });
+
+  envelopeInteractive.addEventListener('click', () => {
+    triggerEnvelopeOpening();
   });
 
   // --- 11. Blessings Wall Logic (With LocalStorage) ---
@@ -551,14 +555,14 @@ document.addEventListener('DOMContentLoaded', () => {
     },
     {
       name_en: "Uday Babai",
-      name_te: "అనిల్ అంకుల్",
+      name_te: "ఉదయ్ బాబాయి",
       message_en: "Wishing the sweetest baby girl a wonderful 1st birthday! Keep spreading smiles and laughter, little princess.",
       message_te: "అందమైన బుజ్జి పాపాయికి మొదటి పుట్టినరోజు శుభాకాంక్షలు! నీ చిరునవ్వులతో మా అందరి ఇళ్లల్లో వెలుగులు నింపాలి.",
       date: new Date(Date.now() - 3600000 * 5).toLocaleDateString() // 5 hours ago
     },
     {
       name_en: "Sai",
-      name_te: "సరిత ఆంటీ",
+      name_te: "సాయి",
       message_en: "Happy Birthday Dushya! Sending loads of virtual hugs, kisses, and blessings to you. Have an amazing party!",
       message_te: "పుట్టినరోజు శుభాకాంక్షలు దుష్య! నీకు ఎనలేని ప్రేమ, ఆశీస్సులు. ఈ వేడుక నీ జీవితంలో మరెన్నో సంతోషాలు తేవాలి!",
       date: new Date().toLocaleDateString() // Today
@@ -567,6 +571,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Retrieve existing blessings list from LocalStorage, or initialize defaults
   let blessings = JSON.parse(localStorage.getItem('dushya_blessings'));
+  
+  // Auto-reset cached defaults if they contain old names to prevent caching issues
+  if (blessings && blessings.length > 0) {
+    const hasOldNames = blessings.some(b => 
+      b.name_te === "అనిల్ అంకుల్" || 
+      b.name_te === "సరిత ఆంటీ" || 
+      b.name_en === "Anil Uncle" || 
+      b.name_en === "Saritha Aunt"
+    );
+    if (hasOldNames) {
+      blessings = null;
+    }
+  }
+
   if (!blessings || blessings.length === 0) {
     blessings = defaultBlessings;
     localStorage.setItem('dushya_blessings', JSON.stringify(blessings));
@@ -769,6 +787,7 @@ document.addEventListener('DOMContentLoaded', () => {
           
           // Clean canvas node from DOM after transition
           setTimeout(() => {
+            window.removeEventListener('resize', resizeScratchCanvas);
             canvas.remove();
           }, 600);
         }
@@ -805,6 +824,16 @@ document.addEventListener('DOMContentLoaded', () => {
         isDrawing = false;
         checkScratchProgress();
       });
+
+      // Resize listener to adapt canvas size dynamically on orientation changes
+      function resizeScratchCanvas() {
+        if (container.classList.contains('scratched')) return;
+        const newRect = container.getBoundingClientRect();
+        canvas.width = newRect.width;
+        canvas.height = newRect.height;
+        drawOverlay();
+      }
+      window.addEventListener('resize', resizeScratchCanvas);
     });
   }
 
