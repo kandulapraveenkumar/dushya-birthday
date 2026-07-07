@@ -550,14 +550,14 @@ document.addEventListener('DOMContentLoaded', () => {
       date: new Date(Date.now() - 3600000 * 24).toLocaleDateString() // 1 day ago
     },
     {
-      name_en: "Anil Uncle",
+      name_en: "Uday Babai",
       name_te: "అనిల్ అంకుల్",
       message_en: "Wishing the sweetest baby girl a wonderful 1st birthday! Keep spreading smiles and laughter, little princess.",
       message_te: "అందమైన బుజ్జి పాపాయికి మొదటి పుట్టినరోజు శుభాకాంక్షలు! నీ చిరునవ్వులతో మా అందరి ఇళ్లల్లో వెలుగులు నింపాలి.",
       date: new Date(Date.now() - 3600000 * 5).toLocaleDateString() // 5 hours ago
     },
     {
-      name_en: "Saritha Aunty",
+      name_en: "Sai",
       name_te: "సరిత ఆంటీ",
       message_en: "Happy Birthday Dushya! Sending loads of virtual hugs, kisses, and blessings to you. Have an amazing party!",
       message_te: "పుట్టినరోజు శుభాకాంక్షలు దుష్య! నీకు ఎనలేని ప్రేమ, ఆశీస్సులు. ఈ వేడుక నీ జీవితంలో మరెన్నో సంతోషాలు తేవాలి!",
