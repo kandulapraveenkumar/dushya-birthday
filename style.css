@@ -618,9 +618,13 @@ body.lang-te .baby-name {
   position: relative;
   width: 320px;
   height: 320px;
+  max-width: 90vw;
+  max-height: 90vw;
 }
 
 .princess-frame-svg {
+  width: 100%;
+  height: 100%;
   filter: drop-shadow(0 15px 30px rgba(231, 136, 149, 0.25));
 }
 
