@@ -712,6 +712,7 @@ document.addEventListener('DOMContentLoaded', () => {
       });
       
       // Scratching movement handlers
+      let moveCount = 0;
       function scratch(e) {
         if (!isDrawing) return;
         
@@ -726,9 +727,15 @@ document.addEventListener('DOMContentLoaded', () => {
         ctx.save();
         ctx.globalCompositeOperation = 'destination-out';
         ctx.beginPath();
-        ctx.arc(x, y, 22, 0, Math.PI * 2); // 22px scratch radius
+        ctx.arc(x, y, 38, 0, Math.PI * 2); // 38px scratch radius
         ctx.fill();
         ctx.restore();
+
+        // Check progress in real-time (every 5 movement events) so it reveals mid-swipe
+        moveCount++;
+        if (moveCount % 5 === 0) {
+          checkScratchProgress();
+        }
       }
       
       function checkScratchProgress() {
@@ -737,7 +744,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // Fast sampling loop to check transparency
         const w = canvas.width;
         const h = canvas.height;
-        const numSamples = 60;
+        const numSamples = 30; // Fast sampling count
         let transparentPixels = 0;
         
         for (let i = 0; i < numSamples; i++) {
@@ -752,7 +759,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         
         const percentage = transparentPixels / numSamples;
-        if (percentage > 0.4) {
+        if (percentage > 0.20) { // 20% threshold (approx 2-3 quick swipes to reveal)
           // Mark as scratched
           container.classList.add('scratched');
           canvas.classList.add('faded');
