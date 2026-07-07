@@ -1418,6 +1418,12 @@ body.lang-te .baby-name {
     padding-bottom: 20px !important;
     margin-bottom: 15px !important;
   }
+  
+  .hero-section {
+    min-height: auto !important;
+    padding-top: 15px !important;
+    padding-bottom: 25px !important;
+  }
 }
 
 /* ========================================================================

@@ -15,6 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const musicToggleBtn = document.getElementById('music-toggle');
   const blessingForm = document.getElementById('blessing-form');
   const blessingsFeed = document.getElementById('blessings-feed');
+  let handleScrollControls = null;
   
   // --- Language Toggle Logic ---
   // Retrieve language preference or default to English
@@ -521,6 +522,8 @@ document.addEventListener('DOMContentLoaded', () => {
           
           // Initialize scratch canvases now that mainContent is visible and has dimensions!
           initScratchCards();
+          // Initialize controls check now that elements are rendered
+          if (handleScrollControls) handleScrollControls();
         }, 1500);
 
         setTimeout(() => {
@@ -843,17 +846,17 @@ document.addEventListener('DOMContentLoaded', () => {
   const floatingRight = document.querySelector('.floating-controls-right');
 
   if (thankYouSection && floatingLeft && floatingRight) {
-    function handleScrollControls() {
+    handleScrollControls = function() {
       const rect = thankYouSection.getBoundingClientRect();
-      // If the top of the thank-you section enters the viewport
-      if (rect.top < window.innerHeight) {
+      // If the thank-you section is displayed and its top edge has entered the viewport
+      if (rect.height > 0 && rect.top < window.innerHeight) {
         floatingLeft.classList.add('hide-floating');
         floatingRight.classList.add('hide-floating');
       } else {
         floatingLeft.classList.remove('hide-floating');
         floatingRight.classList.remove('hide-floating');
       }
-    }
+    };
     window.addEventListener('scroll', handleScrollControls, { passive: true });
     window.addEventListener('resize', handleScrollControls);
   }
